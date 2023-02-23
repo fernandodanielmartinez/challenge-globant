@@ -1,0 +1,35 @@
+{
+  "name" : "job-load-historical-data",
+  "description" : "",
+  "role" : "arn:aws:iam::995038328567:role/service-role/AWSGlueServiceRole-users",
+  "executionProperty" : {
+    "maxConcurrentRuns" : 1
+  },
+  "command" : {
+    "name" : "pythonshell",
+    "scriptLocation" : "s3://s3-challenge-globant-scripts/job-load-historical-data/job-load-historical-data.py",
+    "pythonVersion" : "3.9"
+  },
+  "defaultArguments" : {
+    "--enable-job-insights" : "false",
+    "--job-language" : "python",
+    "--TempDir" : "s3://aws-glue-assets-995038328567-us-east-1/temporary/",
+    "--enable-glue-datacatalog" : "true",
+    "library-set" : "analytics"
+  },
+  "connections" : {
+    "connections" : [ "MySQL" ]
+  },
+  "maxRetries" : 0,
+  "allocatedCapacity" : 0,
+  "timeout" : 2880,
+  "maxCapacity" : 0.0625,
+  "glueVersion" : "3.0",
+  "executionClass" : "STANDARD",
+  "sourceControlDetails" : {
+    "provider" : "GITHUB",
+    "repository" : "challenge-globant",
+    "branch" : "feature-load-historical-data",
+    "folder" : "job-load-historical-data"
+  }
+}
