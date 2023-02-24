@@ -32,7 +32,10 @@ def lambda_handler(event, context):
     
     if len(event) < 1 or len(event) > 1000:
         logger.error("API Service can only work from 1 up to 1000 rows")
-        sys.exit()        
+        return {
+            'statusCode': 400,
+            'body': json.dumps("API Service can only work from 1 up to 1000 rows")
+        }
 
     for row in event:
         if 'id' not in row or 'department' not in row:
