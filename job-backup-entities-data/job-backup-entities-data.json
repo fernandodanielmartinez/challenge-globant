@@ -1,0 +1,40 @@
+{
+  "name" : "job-backup-entities-data",
+  "description" : "",
+  "role" : "arn:aws:iam::995038328567:role/service-role/AWSGlueServiceRole-users",
+  "executionProperty" : {
+    "maxConcurrentRuns" : 1
+  },
+  "command" : {
+    "name" : "glueetl",
+    "scriptLocation" : "s3://s3-challenge-globant-scripts/job-backup-entities-data/job-backup-entities-data.py",
+    "pythonVersion" : "3"
+  },
+  "defaultArguments" : {
+    "--spark-event-logs-path" : "s3://aws-glue-assets-995038328567-us-east-1/sparkHistoryLogs/",
+    "--enable-job-insights" : "false",
+    "--enable-glue-datacatalog" : "true",
+    "--enable-continuous-cloudwatch-log" : "true",
+    "--job-bookmark-option" : "job-bookmark-disable",
+    "--job-language" : "python",
+    "--TempDir" : "s3://aws-glue-assets-995038328567-us-east-1/temporary/",
+    "--extra-jars" : "s3://s3-challenge-globant-scripts/drivers/mysql-connector-j-8.0.32.jar,s3://s3-challenge-globant-scripts/drivers/spark-avro_2.12-3.1.1.jar"
+  },
+  "connections" : {
+    "connections" : [ "MySQL" ]
+  },
+  "maxRetries" : 0,
+  "allocatedCapacity" : 2,
+  "timeout" : 2880,
+  "maxCapacity" : 2.0,
+  "glueVersion" : "3.0",
+  "numberOfWorkers" : 2,
+  "workerType" : "G.1X",
+  "executionClass" : "STANDARD",
+  "sourceControlDetails" : {
+    "provider" : "GITHUB",
+    "repository" : "challenge-globant",
+    "branch" : "feature-backup-entities-data",
+    "folder" : "job-backup-entities-data"
+  }
+}
