@@ -19,7 +19,7 @@ job = Job(glueContext)
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-entities_dict = ['departments', 'hired_employees', 'jobs']
+entities_list = ['departments', 'hired_employees', 'jobs']
 
 def get_secret():
     try:
@@ -27,7 +27,7 @@ def get_secret():
         client = session.client(service_name='secretsmanager', region_name="us-east-1")
         get_secret_value_response = client.get_secret_value(SecretId="MySqlCredentials")
         return json.loads(get_secret_value_response['SecretString'])
-    except Exceptions as e:
+    except Exception as e:
         logger.error("ERROR: Unexpected error: Could not get secret.")
         logger.error(e)
 
@@ -41,7 +41,7 @@ def read_data_from_sql(entity, secret):
                     .option("user", secret['user']) \
                     .option("password", secret['passw']) \
                     .load()
-    except Exceptions as e:
+    except Exception as e:
         logger.error("ERROR: Unexpected error: Could not get data from sql.")
         logger.error(e)
     
@@ -50,17 +50,19 @@ def write_to_s3(entity, df):
     try:
         df.write \
           .format('avro') \
+          .mode('overwrite') \
           .save('s3a://{}/{}/'.format(s3_bucket, entity))
-    except Exceptions as e:
+        logger.info("Backup on table {} done".format(entity.upper()))
+    except Exception as e:
         logger.error("ERROR: Unexpected error: Could not write to s3.")
         logger.error(e)
     
 secret = get_secret()
 
-for key in entities_dict:
+for entity in entities_list:
     job.init(args['JOB_NAME'], args)
     
-    entity_df = read_data_from_sql(key, secret)
-    write_to_s3(key, entity_df)
+    entity_df = read_data_from_sql(entity, secret)
+    write_to_s3(entity, entity_df)
 
     job.commit()
