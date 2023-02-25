@@ -16,14 +16,20 @@ try:
 except Exceptions as e:
     logger.error("ERROR: Unexpected error: Could not get secret.")
     logger.error(e)
-    sys.exit()
+    return {
+        'statusCode': 500,
+        'body': json.dumps("ERROR: Unexpected error: Could not get secret.")
+    }
 
 try:
     conn = pymysql.connect(host=secret['host'], user=secret['user'], passwd=secret['passw'], db=secret['db'], connect_timeout=5)
 except pymysql.MySQLError as e:
     logger.error("ERROR: Unexpected error: Could not connect to MySQL instance.")
     logger.error(e)
-    sys.exit()
+    return {
+        'statusCode': 500,
+        'body': json.dumps("ERROR: Unexpected error: Could not connect to MySQL instance.")
+    }
 
 logger.info("SUCCESS: Connection to RDS MySQL instance succeeded")
 
