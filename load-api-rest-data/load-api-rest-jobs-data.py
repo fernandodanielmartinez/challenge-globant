@@ -13,7 +13,7 @@ try:
     client = session.client(service_name='secretsmanager', region_name="us-east-1")
     get_secret_value_response = client.get_secret_value(SecretId="MySqlCredentials")
     secret = json.loads(get_secret_value_response['SecretString'])
-except Exceptions as e:
+except Exception as e:
     logger.error("ERROR: Unexpected error: Could not get secret.")
     logger.error(e)
     return {
