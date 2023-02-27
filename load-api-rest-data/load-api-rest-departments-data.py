@@ -9,31 +9,32 @@ logger.setLevel(logging.INFO)
 
 session = boto3.session.Session()
 
-try:
-    client = session.client(service_name='secretsmanager', region_name="us-east-1")
-    get_secret_value_response = client.get_secret_value(SecretId="MySqlCredentials")
-    secret = json.loads(get_secret_value_response['SecretString'])
-except Exception as e:
-    logger.error("ERROR: Unexpected error: Could not get secret.")
-    logger.error(e)
-    return {
-        'statusCode': 500,
-        'body': json.dumps("ERROR: Unexpected error: Could not get secret.")
-    }
-
-try:
-    conn = pymysql.connect(host=secret['host'], user=secret['user'], passwd=secret['passw'], db=secret['db'], connect_timeout=5)
-except pymysql.MySQLError as e:
-    logger.error("ERROR: Unexpected error: Could not connect to MySQL instance.")
-    logger.error(e)
-    return {
-        'statusCode': 500,
-        'body': json.dumps("ERROR: Unexpected error: Could not connect to MySQL instance.")
-    }
-
-logger.info("SUCCESS: Connection to RDS MySQL instance succeeded")
-
 def lambda_handler(event, context):
+    
+    try:
+        client = session.client(service_name='secretsmanager', region_name="us-east-1")
+        get_secret_value_response = client.get_secret_value(SecretId="MySqlCredentials")
+        secret = json.loads(get_secret_value_response['SecretString'])
+    except Exception as e:
+        logger.error("ERROR: Unexpected error: Could not get secret.")
+        logger.error(e)
+        return {
+            'statusCode': 500,
+            'body': json.dumps("ERROR: Unexpected error: Could not get secret.")
+        }
+
+    try:
+        conn = pymysql.connect(host=secret['host'], user=secret['user'], passwd=secret['passw'], db=secret['db'], connect_timeout=5)
+    except pymysql.MySQLError as e:
+        logger.error("ERROR: Unexpected error: Could not connect to MySQL instance.")
+        logger.error(e)
+        return {
+            'statusCode': 500,
+            'body': json.dumps("ERROR: Unexpected error: Could not connect to MySQL instance.")
+        }
+
+    logger.info("SUCCESS: Connection to RDS MySQL instance succeeded")
+
     item_count = 0
     
     if len(event) < 1 or len(event) > 1000:
