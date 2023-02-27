@@ -37,8 +37,6 @@ S3 buckets structure:
 
   ![image](https://user-images.githubusercontent.com/37267326/221586423-9d51d72c-a0c0-4af8-a922-4d551fa9f46e.png)
 
-  ![image](https://user-images.githubusercontent.com/37267326/221586424-58b6ff86-b308-41e0-80a5-75ccf7b73d40.png)
-  
   ![image](https://user-images.githubusercontent.com/37267326/221586478-64097d1d-5074-4bdd-a6bb-f5f1fa8e2ec1.png)
 
  API gateway:
